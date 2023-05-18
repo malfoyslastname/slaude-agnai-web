@@ -3,6 +3,7 @@ import axios from 'axios';
 import FormData from 'form-data';
 import WebSocket from 'ws';
 import config from './config.js';
+import localtunnel from 'localtunnel';
 
 const app = express();
 
@@ -112,7 +113,13 @@ app.post('/(.*)/chat/completions', async (req, res, next) => {
 
 app.listen(config.PORT, () => {
     console.log(`Slaude is running at http://localhost:${config.PORT}`);
+    console.log('Checking config.')
     checkConfig();
+    console.log('Launching local tunnel.')
+    localtunnel({ port: config.PORT })
+        .then((tunnel) => {
+            console.log(`Tunnel URL for use on agnai.chat: ${tunnel.url}`);
+        })
 });
 
 function checkConfig() {
